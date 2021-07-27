@@ -16,7 +16,9 @@ module.exports = {
   },
   async register(req, res){
     try{
+
       const user = await User.create(req.body)
+      
       res.status(201).json({
         success: true,
         data: user
@@ -29,14 +31,24 @@ module.exports = {
       })
     }
   },
-  async login(req, res){
+  async login(req, res, next){
     try {
+      const { username, password } = req.body
+      const user = await User.findOne({username})
+      if(!user){
+        throw new Error('user not found')
+      }
+
+      const isPasswordValid = await user.verifyPassword(password)
+      if(!isPasswordValid){
+        throw new Error('password invalid')
+      }
       res.status(200).json({
         success: true,
         message: 'success login'
       })
     } catch (err) {
-      res.status(404).json({
+      res.status(403).json({
         success: false,
         message: err.message
       }) 
