@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
+const { db } = require('../config/config')
 
 const dbConnect = () => {
   try {
-    mongoose.connect(process.env.DB_URI, {
+    mongoose.connect(db.db_uri, {
       useCreateIndex: true,
       useFindAndModify: true,
       useNewUrlParser: true,
