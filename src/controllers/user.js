@@ -1,40 +1,45 @@
 const { User } = require('../models')
+const validator = require('validator')
+const jwt = require('jsonwebtoken')
+const { jwt_secret } = require('../config/config')
+
 
 module.exports = {
-  findById: (req, res) => {
-    const { user } = req
-    if(!user){
-      res.status(400).json({
-        success: false,
-        message: `There is an issue on the server side`
-      })  
-      res.status(200).json({
-        success: true,
-        message: user
-      })
-    }
-  },
   async register(req, res){
     try{
+      const { email, password } = req.body
+      
+      if(!validator.isEmail(email)){
+        console.log('this true');
+        throw new Error('use valid email')
+      } 
+      
+      const user = await User.findOne({email})
+      if(user){
+        throw new Error('Somebody already use this email')
+      }
 
-      const user = await User.create(req.body)
+      await User.create(req.body)
+
+      const token = jwt.sign({email}, jwt_secret)
       
       res.status(201).json({
         success: true,
-        data: user
+        message: 'success to create data',
+        token
       })
     }
     catch(err){
       res.status(400).json({
         success: false,
-        message: err.message
+        message: err.message,
       })
     }
   },
   async login(req, res, next){
     try {
-      const { username, password } = req.body
-      const user = await User.findOne({username})
+      const { email, password } = req.body
+      const user = await User.findOne({email})
       if(!user){
         throw new Error('user not found')
       }
