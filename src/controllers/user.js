@@ -1,7 +1,6 @@
 const { User } = require('../models')
 const validator = require('validator')
-const jwt = require('jsonwebtoken')
-const { jwt_secret } = require('../config/config')
+const { generateToken } = require('../utils')
 
 
 module.exports = {
@@ -21,7 +20,7 @@ module.exports = {
 
       await User.create(req.body)
 
-      const token = jwt.sign({email}, jwt_secret)
+      const token = await generateToken({email})
       
       res.status(201).json({
         success: true,
@@ -46,11 +45,16 @@ module.exports = {
 
       const isPasswordValid = await user.verifyPassword(password)
       if(!isPasswordValid){
-        throw new Error('password invalid')
+        throw new Error(`password doesn't match with email`)
       }
+
+      const token = await generateToken({email}) 
+
       res.status(200).json({
         success: true,
-        message: 'success login'
+        message: 'success login',
+        token: token
+
       })
     } catch (err) {
       res.status(403).json({
