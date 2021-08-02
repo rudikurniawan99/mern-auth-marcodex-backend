@@ -5,6 +5,7 @@ const generateToken = (data) => {
   return jwt.sign(data, jwt_secret) 
 }
 
+
 module.exports = {
-  generateToken
+  generateToken,
 }

@@ -38,6 +38,7 @@ module.exports = {
   async login(req, res, next){
     try {
       const { email, password } = req.body
+
       const user = await User.findOne({email})
       if(!user){
         throw new Error('user not found')
@@ -49,18 +50,34 @@ module.exports = {
       }
 
       const token = await generateToken({email}) 
-
       res.status(200).json({
         success: true,
         message: 'success login',
         token: token
-
       })
     } catch (err) {
       res.status(403).json({
         success: false,
         message: err.message
       }) 
+    }
+  },
+  async getUsers(req, res, next){
+    try{
+      const users = await User.find()
+
+      res.status(201).json({
+        success: true,
+        message: 'get all data',
+        data: users
+      })
+    }
+    catch(err){
+      res.status(403).json({
+        success: false,
+        message: err.message
+      })
+
     }
   }
 }
