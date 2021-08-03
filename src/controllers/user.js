@@ -63,8 +63,13 @@ module.exports = {
     }
   },
   async getUsers(req, res, next){
+    const page = parseInt(req.query.page) || 1
+    const itemLimit = parseInt(req.query.itemLimit) || 9
+    console.log(`page=${page}, limit=${itemLimit}`)
     try{
       const users = await User.find()
+        .skip((page-1) * itemLimit)
+        .limit(itemLimit)
 
       res.status(201).json({
         success: true,
