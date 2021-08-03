@@ -5,8 +5,7 @@ const { authorize } = require('../middleware/authorization')
 router.post('/register', register)
 router.post('/login', login)
 
-router.use('/users', authorize)
-router.get('/users', getUsers)
+router.get('/users', authorize, getUsers)
 
 router.get('/user/:id', getUser)
 router.put('/user/:id', updateUser)

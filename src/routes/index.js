@@ -1,11 +1,9 @@
-const express = require('express')
+const router = require('express').Router()
 const auth = require('./auth')
-const { authorize } = require('../middleware/authorization')
+const product = require('./product')
 
-const router = express.Router()
 
-router.use('/users', authorize)
 router.use('/auth', auth,)
-// router.use('/product', )
+router.use('/product', product)
 
 module.exports = router
