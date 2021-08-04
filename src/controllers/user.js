@@ -71,8 +71,6 @@ module.exports = {
         .skip((page-1) * itemLimit)
         .limit(itemLimit)
 
-      console.log('get user data');
-
       res.status(201).json({
         success: true,
         message: 'get users',

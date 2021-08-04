@@ -5,8 +5,6 @@ const authorize = (req, res, next) => {
   const { token } = req.headers
 
   const user = jwt.verify(token, jwt_secret)
-  
-  console.log('verify jwt', user)
 
   if(!user){
     throw new Error('please login first')

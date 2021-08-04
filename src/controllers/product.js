@@ -41,5 +41,30 @@ module.exports = {
         message: err.message
       }) 
     }
+  },
+  async getProducts(req, res){
+    const page = parseInt(req.query.page) || 1
+    const itemLimit = parseInt(req.query.itemLimit) || 5
+
+    console.log(`page:${page}, limit:${itemLimit}`)
+
+    try {
+      const products = await Product.find()
+        .skip((page-1) * itemLimit) 
+        .limit(itemLimit)
+        .sort({createdAt: 'desc'})
+
+      res.status(201).json({
+        success: true,
+        message: 'succes to get data',
+        data: products
+      })
+
+    } catch (e) {
+      res.status(403).json({
+        success: false,
+        message: e.message
+      })
+    }
   }
 }
