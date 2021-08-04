@@ -46,8 +46,6 @@ module.exports = {
     const page = parseInt(req.query.page) || 1
     const itemLimit = parseInt(req.query.itemLimit) || 5
 
-    console.log(`page:${page}, limit:${itemLimit}`)
-
     try {
       const products = await Product.find()
         .skip((page-1) * itemLimit) 
@@ -65,6 +63,51 @@ module.exports = {
         success: false,
         message: e.message
       })
+    }
+  },
+  async updateProduct(req, res){
+    const { name, category, description } = req.body
+    const { id } = req.params
+
+    console.log(name, category, description, id);
+
+    try {
+      const product = await Product.findByIdAndUpdate(id, {
+        name,
+        category,
+        description
+      },{
+        useFindAndModify: false
+      }) 
+
+      res.status(201).json({
+        success: true,
+        message: 'success to edit product',
+        data: product
+      })
+    } catch (e) {
+      res.status(403).json({
+        success: false,
+        message: e.message
+      }) 
+    }
+  },
+  async deleteProduct(req, res){
+    const { id } = req.params
+
+    try {
+      const product = await Product.findByIdAndDelete(id)
+
+      res.status(201).json({
+        success: true,
+        message: 'success to delete product',
+        data: product
+      })
+    } catch (e) {
+      res.status(403).json({
+        success: false,
+        message: e.message
+      }) 
     }
   }
 }
