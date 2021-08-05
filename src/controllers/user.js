@@ -6,26 +6,31 @@ const { generateToken } = require('../utils')
 module.exports = {
   async register(req, res){
     try{
-      const { email, password } = req.body
-      
+      const { email, password, fullname} = req.body
+
+      console.log(req.body)
+
       if(!validator.isEmail(email)){
         console.log('this true');
         throw new Error('use valid email')
       } 
-      
       const user = await User.findOne({email})
       if(user){
         throw new Error('Somebody already use this email')
       }
 
-      await User.create(req.body)
+      const newUser = await User.create({
+        email,
+        password,
+        fullname,
+      })
 
       const token = await generateToken({email})
       
       res.status(201).json({
         success: true,
         message: 'success to create data',
-        token
+        token,
       })
     }
     catch(err){
