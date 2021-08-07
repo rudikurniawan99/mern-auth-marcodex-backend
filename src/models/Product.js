@@ -13,9 +13,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // photo: {
-  //   type
-  // }
+  thumbnail: {
+    type: String,
+    required: true
+  },
 },
 {
   timestamps: true

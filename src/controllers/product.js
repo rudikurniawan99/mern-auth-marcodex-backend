@@ -3,12 +3,15 @@ const { Product } = require('../models')
 module.exports = {
   async create(req, res){
     const { name, category, description } = req.body
+    const thumbnail = req.file.path 
+    console.log(req.file.path)
 
     try {
       const product = await Product.create({
         name,
         category,
-        description
+        description,
+        thumbnail
       })
 
       res.status(201).json({
