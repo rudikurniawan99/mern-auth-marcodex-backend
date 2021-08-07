@@ -2,7 +2,7 @@ const { Product } = require('../models')
 
 module.exports = {
   async create(req, res){
-    const { name, category, description } = req.body
+    const { name, category, description, stock } = req.body
     const thumbnail = req.file.path 
     console.log(req.file.path)
 
@@ -11,6 +11,7 @@ module.exports = {
         name,
         category,
         description,
+        stock,
         thumbnail
       })
 
