@@ -70,7 +70,7 @@ module.exports = {
     }
   },
   async updateProduct(req, res){
-    const { name, category, description } = req.body
+    const { name, category, description, stock } = req.body
     const { id } = req.params
 
     console.log(name, category, description, id);
@@ -79,7 +79,8 @@ module.exports = {
       const product = await Product.findByIdAndUpdate(id, {
         name,
         category,
-        description
+        description,
+        stock
       },{
         useFindAndModify: false
       }) 
