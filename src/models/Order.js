@@ -38,6 +38,10 @@ const orderSchema = new mongoose.Schema({
   },
   order_status: {
     type: String,
-    required: true
+    required: true,
+    default: 'PENDING'
   }
 })
+
+const Order = mongoose.model('Order', orderSchema)
+module.exports = Order
