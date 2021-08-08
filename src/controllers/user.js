@@ -155,6 +155,9 @@ module.exports = {
 
     try {
       const user = await User.findByIdAndDelete(id)
+      await Cart.findOneAndDelete({
+        user_id: id
+      })
       
       res.status(201).json({
         success: true,
