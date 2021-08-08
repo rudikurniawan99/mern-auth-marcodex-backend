@@ -1,4 +1,4 @@
-const { User } = require('../models')
+const { User, Cart } = require('../models')
 const validator = require('validator')
 const { generateToken } = require('../utils')
 
@@ -22,11 +22,24 @@ module.exports = {
         fullname,
       })
 
-      const token = await generateToken({id : newUser.id})
+
+      //create cart
+      const cart = await Cart.create({
+        user_id: newUser.id,
+        products: []
+      })
+
+      if(!cart){
+        throw new Error('failed to create cart')
+      }
       
+      const token = await generateToken({
+        id : newUser.id,
+      })
+
       res.status(201).json({
         success: true,
-        message: 'success to create data',
+        message: 'success to create user and cart',
         token,
       })
     }
