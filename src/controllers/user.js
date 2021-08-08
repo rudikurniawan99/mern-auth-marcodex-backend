@@ -8,10 +8,7 @@ module.exports = {
     try{
       const { email, password, fullname} = req.body
 
-      console.log(req.body)
-
       if(!validator.isEmail(email)){
-        console.log('this true');
         throw new Error('use valid email')
       } 
       const user = await User.findOne({email})
@@ -25,7 +22,7 @@ module.exports = {
         fullname,
       })
 
-      const token = await generateToken({email})
+      const token = await generateToken({id : newUser.id})
       
       res.status(201).json({
         success: true,
@@ -54,7 +51,7 @@ module.exports = {
         throw new Error(`password doesn't match with email`)
       }
 
-      const token = await generateToken({email}) 
+      const token = await generateToken({id: user.id}) 
       res.status(200).json({
         success: true,
         message: 'success login',

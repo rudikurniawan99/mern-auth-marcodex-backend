@@ -1,6 +1,6 @@
 const router = require('express').Router()
-const { create } = require('../controllers/cart')
+const { createCart } = require('../controllers/cart')
 
-router.post('/create',  create)
+router.post('/create',  createCart)
 
 module.exports = router
