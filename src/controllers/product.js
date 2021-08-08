@@ -2,9 +2,8 @@ const { Product } = require('../models')
 
 module.exports = {
   async create(req, res){
-    const { name, category, description, stock } = req.body
+    const { name, category, description, stock, price } = req.body
     const thumbnail = req.file.path 
-    console.log(req.file.path)
 
     try {
       const product = await Product.create({
@@ -12,6 +11,7 @@ module.exports = {
         category,
         description,
         stock,
+        price,
         thumbnail
       })
 
@@ -70,7 +70,7 @@ module.exports = {
     }
   },
   async updateProduct(req, res){
-    const { name, category, description, stock } = req.body
+    const { name, category, description, stock, price } = req.body
     const { id } = req.params
 
     console.log(name, category, description, id);
@@ -80,7 +80,8 @@ module.exports = {
         name,
         category,
         description,
-        stock
+        stock,
+        price,
       },{
         useFindAndModify: false
       }) 
