@@ -1,13 +1,12 @@
 const router = require('express').Router()
-const multer = require('multer')
 
-const { create, getProduct, getProducts, updateProduct, deleteProduct } = require('../controllers/product')
+const { create, getProduct, getProducts, updateProduct, deleteProduct, deleteAll } = require('../controllers/product')
 const { authorize } = require('../middleware/authorization')
-const fileStorage = require('../config/fileStorage')
+const upload = require('../middleware/upload')
 
-router.use(multer({storage: fileStorage}).single('thumbnail'))
-router.post('/create', authorize, create)
+router.post('/create', authorize, upload.single('thumbnail') , create)
 router.get('/products', getProducts)
+router.delete('/delete-all', deleteAll)
 router.get('/:id', getProduct)
 router.put('/:id', authorize, updateProduct)
 router.delete('/:id', authorize, deleteProduct)

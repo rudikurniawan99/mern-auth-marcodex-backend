@@ -1,9 +1,11 @@
 const { Product } = require('../models')
+const { removeImageFile } =require('../utils')
 
 module.exports = {
   async create(req, res){
     const { name, category, description, stock, price } = req.body
     const thumbnail = req.file.path 
+    console.log(req.file)
 
     try {
       const product = await Product.create({
@@ -11,7 +13,7 @@ module.exports = {
         category,
         description,
         stock,
-        price,
+        price: parseInt(price),
         thumbnail
       })
 
@@ -81,7 +83,7 @@ module.exports = {
         category,
         description,
         stock,
-        price,
+        price: parseInt(price),
       },{
         useFindAndModify: false
       }) 
@@ -102,12 +104,30 @@ module.exports = {
     const { id } = req.params
 
     try {
-      const product = await Product.findByIdAndDelete(id)
+      const product = await Product.findById(id) 
+      removeImageFile(product.thumbnail)
+
+      await Product.findByIdAndDelete(id)
 
       res.status(201).json({
         success: true,
         message: 'success to delete product',
         data: product
+      })
+    } catch (e) {
+      res.status(403).json({
+        success: false,
+        message: e.message
+      }) 
+    }
+  },
+  async deleteAll(req, res){
+    try {
+      const products = await Product.deleteMany()
+
+      res.status(201).json({
+        success: true,
+        message: 'success to delete all product',
       })
     } catch (e) {
       res.status(403).json({
