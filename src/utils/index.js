@@ -8,9 +8,8 @@ const generateToken = (data) => {
 }
 
 const removeImageFile = (filepath) => {
-  filepath = path.join(__dirname,'../../', filepath)
-
-  fs.unlink(filepath)
+  const deletefile = path.join(__dirname,'../../', filepath)
+  fs.unlinkSync(deletefile)
 }
 
 

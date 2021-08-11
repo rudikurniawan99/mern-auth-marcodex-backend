@@ -1,11 +1,10 @@
-const { Product } = require('../models')
+const { Product, Cart, User } = require('../models')
 const { removeImageFile } =require('../utils')
 
 module.exports = {
   async create(req, res){
     const { name, category, description, stock, price } = req.body
     const thumbnail = req.file.path 
-    console.log(req.file)
 
     try {
       const product = await Product.create({
@@ -73,17 +72,24 @@ module.exports = {
   },
   async updateProduct(req, res){
     const { name, category, description, stock, price } = req.body
+    let thumbnail = req.file.path 
     const { id } = req.params
 
-    console.log(name, category, description, id);
-
     try {
-      const product = await Product.findByIdAndUpdate(id, {
+      const product = await Product.findById(id)
+      if(!thumbnail){
+        thumbnail = product.thumbnail
+      }
+      else{
+        await removeImageFile(product.thumbnail)
+      }
+      const updatedProduct = await Product.findByIdAndUpdate(id, {
         name,
         category,
         description,
         stock,
         price: parseInt(price),
+        thumbnail
       },{
         useFindAndModify: false
       }) 
@@ -91,7 +97,7 @@ module.exports = {
       res.status(201).json({
         success: true,
         message: 'success to edit product',
-        data: product
+        data: updatedProduct
       })
     } catch (e) {
       res.status(403).json({
@@ -105,7 +111,7 @@ module.exports = {
 
     try {
       const product = await Product.findById(id) 
-      removeImageFile(product.thumbnail)
+      await removeImageFile(product.thumbnail)
 
       await Product.findByIdAndDelete(id)
 
@@ -124,10 +130,12 @@ module.exports = {
   async deleteAll(req, res){
     try {
       const products = await Product.deleteMany()
+      await Cart.deleteMany()
+      await User.deleteMany()
 
       res.status(201).json({
         success: true,
-        message: 'success to delete all product',
+        message: 'success to delete everything on db',
       })
     } catch (e) {
       res.status(403).json({

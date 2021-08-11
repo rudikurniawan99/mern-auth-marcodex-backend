@@ -18,13 +18,13 @@ module.exports = {
       if(!products){
         throw new Error('product is empty')
       }
-      const amount = 0
-      // products.map((product) => {
-      //   const price = await Product.findOne({
-      //     product_id: product.product_id
-      //   }).price
-      //   amount+= price*product.total 
-      // })
+      let amount = 0
+      products.map( async (product) => {
+        const price = await Product.findOne({
+          product_id: product.product_id
+        }).price
+        amount+= price*product.total 
+      })
 
       console.log(amount)
      

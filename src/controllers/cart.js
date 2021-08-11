@@ -1,9 +1,9 @@
-const { Cart, User} = require('../models')
+const { Cart, User, Product} = require('../models')
 const jwt = require('jsonwebtoken')
 const { updateProduct } = require('./product')
 
 module.exports = {
-  async createCart(req, res, next){
+  async addToCart(req, res, next){
     
     try {
       const { product_id } = req.query
@@ -11,10 +11,14 @@ module.exports = {
       const { token } = req.headers
 
       const user_id = jwt.decode(token).id
-
       const cart = await Cart.findOne({
         user_id
       })
+
+      const product = await Product.findById(product_id)
+      if(!product){
+        throw new Error('product doesn\'t exist')
+      } 
 
       const products = [
         {
@@ -29,7 +33,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
-        message: 'success to create cart',
+        message: 'success to add product to cart',
         data: cart,
       })
       
@@ -73,9 +77,11 @@ module.exports = {
         user_id
       }) 
 
-      if(!cart.products){
-        throw new Error('product is null')
+      if(!cart){
+        throw new Error('you dont have a cart, register first')
       }
+
+
 
       const products = cart.products.filter((value, index , arr) => {
         return value.product_id != product_id
@@ -86,7 +92,6 @@ module.exports = {
         products
       })
 
-      console.log(products)
 
       res.status(201).json({
         success: true,

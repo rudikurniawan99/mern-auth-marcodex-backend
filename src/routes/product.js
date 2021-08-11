@@ -8,7 +8,7 @@ router.post('/create', authorize, upload.single('thumbnail') , create)
 router.get('/products', getProducts)
 router.delete('/delete-all', deleteAll)
 router.get('/:id', getProduct)
-router.put('/:id', authorize, updateProduct)
+router.put('/:id', authorize, upload.single('thumbnail'), updateProduct)
 router.delete('/:id', authorize, deleteProduct)
 
 module.exports = router
