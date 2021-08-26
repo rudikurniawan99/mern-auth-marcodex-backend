@@ -57,11 +57,13 @@ module.exports = {
         .skip((page-1) * itemLimit) 
         .limit(itemLimit)
         .sort({createdAt: 'desc'})
+      const total = await Product.count()
 
       res.status(201).json({
         success: true,
         message: 'succes to get data',
-        data: products
+        data: products,
+        total 
       })
 
     } catch (e) {
