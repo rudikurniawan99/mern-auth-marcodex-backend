@@ -23,6 +23,7 @@ module.exports = {
       })
       
     } catch (err) {
+      removeImageFile(thumbnail)
       res.status(403).json({
         success: false,
         message: err.message
