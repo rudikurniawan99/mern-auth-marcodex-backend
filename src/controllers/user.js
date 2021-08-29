@@ -1,6 +1,7 @@
 const { User, Cart } = require('../models')
 const validator = require('validator')
 const { generateToken } = require('../utils')
+const jwt = require('jsonwebtoken')
 
 
 module.exports = {
@@ -101,9 +102,12 @@ module.exports = {
     }
   },
   async getUser(req, res, next){
-    const id = req.params.id
+    const { token } = req.headers
+
 
     try {
+      const { id } = jwt.decode(token)
+
       const user = await User.findById(id) 
       if(!user){
         throw new Error('User not find')
@@ -112,7 +116,11 @@ module.exports = {
       res.status(201).json({
         success: true,
         message: 'success to get data',
-        data: user.email
+        data: {
+          id: user.id,
+          fullname: user.fullname,
+          email: user.email
+        }
       })
     } catch (err) {
       res.status(404).json({
